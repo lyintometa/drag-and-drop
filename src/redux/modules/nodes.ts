@@ -18,6 +18,7 @@ interface NodesState {
     [id: string]: Node;
   };
   pickedUp: string | null;
+  lastMove: number
   offset: Vector2D;
 }
 
@@ -30,6 +31,7 @@ const initialState: NodesState = {
   allIds: [],
   byId: {},
   pickedUp: null,
+  lastMove: Date.now(),
   offset: { x: 0, y: 0 },
 };
 
@@ -39,6 +41,7 @@ const initialStateTest: NodesState = {
     "randomUUID()": { id: "randomUUID()", position: { x: 0, y: 0}}
   },
   pickedUp: null,
+  lastMove: Date.now(),
   offset: { x: 0, y: 0 },
 };
 
@@ -64,6 +67,10 @@ export const nodesSlice = createSlice({
       delete state.byId[id];
     },
     setPosition: (state, action: PayloadAction<Node>) => {
+      const now = Date.now()
+      if (state.lastMove + 1000/144 > now) return
+      state.lastMove = now
+      
       const { id, position } = action.payload;
       state.byId[id].position.x = position.x - state.offset.x;
       state.byId[id].position.y = position.y - state.offset.y;
