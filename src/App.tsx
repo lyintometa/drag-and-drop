@@ -1,10 +1,7 @@
-
-import Drawboard from './components/Drawboard/Drawboard';
+import Drawboard from './components/Drawboard/Drawboard'
 
 function App() {
-  return (
-    <Drawboard />
-  );
+  return <Drawboard />
 }
 
-export default App;
+export default App
