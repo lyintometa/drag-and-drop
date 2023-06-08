@@ -10,6 +10,11 @@ export interface Edge {
   targetHandle: number
 }
 
+export interface NodeHandle {
+  nodeId: string
+  handleIndex: number
+}
+
 export interface MovingEdge {
   sourceNode?: string
   sourceHandle?: number
@@ -47,6 +52,7 @@ interface EdgesState {
 }
 
 export const selectEdgeIds = (state: RootState): string[] => state.edges.allIds
+export const selectEdgesIsDrawing = (state: RootState): boolean => state.edges.allIds.includes('temp')
 export const selectEdges = (state: RootState): Edge[] => state.edges.allIds.map(id => state.edges.byId[id])
 export const selectEdge =
   (id: string) =>
@@ -99,8 +105,24 @@ export const edgesSlice = createSlice({
       state.allIds.push(newEdge.id)
       state.byId[newEdge.id] = newEdge
     },
-    dropEdge: state => {
+    dropEdge: (state, action: PayloadAction<NodeHandle | undefined>) => {
+      if (!action.payload){
+        state.allIds = state.allIds.filter(_ => _ !== 'temp')
+        delete state.byId['temp']
+        return
+      }
+
+      const { nodeId, handleIndex } = action.payload
+      const newEdge = {...state.byId['temp']}
+      newEdge.sourceNode ??= nodeId
+      newEdge.sourceHandle ??= handleIndex
+      newEdge.targetNode ??= nodeId
+      newEdge.targetHandle ??= handleIndex
+      newEdge.id = `e-${newEdge.sourceNode}-${newEdge.sourceHandle}-${newEdge.targetNode}-${newEdge.targetHandle}`
+      state.byId[newEdge.id] = newEdge
+      state.allIds.push(newEdge.id)
       state.allIds = state.allIds.filter(_ => _ !== 'temp')
+      delete state.byId['temp']
     },
     removeEdge: (state, action: PayloadAction<string>) => {
       const id = action.payload

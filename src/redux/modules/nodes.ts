@@ -67,11 +67,12 @@ const initialState: NodesState = {
 }
 
 const initialStateTest: NodesState = {
-  allIds: ['randomUUID()', 'awd', 'awd1'],
+  allIds: ['randomUUID()', 'awd', 'awd1', 'awd2'],
   byId: {
-    'randomUUID()': { id: 'randomUUID()', position: { x: 0, y: 0 }, type: NodeType.Constant },
-    awd: { id: 'awd', position: { x: 300, y: 200 }, type: NodeType.Constant },
-    awd1: { id: 'awd1', position: { x: 800, y: 300 }, type: NodeType.Log }
+    'randomUUID()': { id: 'randomUUID()', position: { x: 100, y: 100 }, type: NodeType.Constant },
+    awd: { id: 'awd', position: { x: 300, y: 600 }, type: NodeType.Constant },
+    awd1: { id: 'awd1', position: { x: 800, y: 600 }, type: NodeType.Log },
+    awd2: { id: 'awd2', position: { x: 800, y: 300 }, type: NodeType.Log },
   },
   pickedUp: null,
   lastMove: Date.now(),

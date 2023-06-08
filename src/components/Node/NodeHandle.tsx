@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { Button, SxProps } from '@mui/material'
-import { useAppDispatch } from '../../redux/hooks'
-import { dropEdge, moveEdge, startEdge } from '../../redux/modules/edges'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { addEdge, dropEdge, moveEdge, selectEdgesIsDrawing, startEdge } from '../../redux/modules/edges'
 
 export interface NodeHandleProps {
   nodeId: string
@@ -13,6 +13,8 @@ export interface NodeHandleProps {
 function NodeHandle({ nodeId, index, type, sx }: NodeHandleProps) {
   const dispatch = useAppDispatch()
   const dummyRef = useRef<HTMLDivElement>(null)
+  const d = useAppSelector(selectEdgesIsDrawing)
+
   const side = type === 'source' ? { right: '-7px' } : { left: '-7px' }
 
   const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
@@ -30,7 +32,19 @@ function NodeHandle({ nodeId, index, type, sx }: NodeHandleProps) {
 
   const handleDragEnd = (e: React.DragEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    dispatch(dropEdge())
+    //dispatch(dropEdge())
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    dispatch(dropEdge({ nodeId, handleIndex: index }))
+    console.log(nodeId, index)
+    console.log(e)
   }
 
   return (
@@ -38,8 +52,7 @@ function NodeHandle({ nodeId, index, type, sx }: NodeHandleProps) {
       <div ref={dummyRef} />
       <Button
         sx={{
-          margin: 'auto',
-          backgroundColor: 'lightgrey',
+          backgroundColor: d ? 'blue' : 'lightgrey',
           minWidth: 0,
           padding: 0,
           height: '14px',
@@ -56,6 +69,8 @@ function NodeHandle({ nodeId, index, type, sx }: NodeHandleProps) {
         onDragStart={handleDragStart}
         onDrag={handleDrag}
         onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       />
     </>
   )

@@ -3,7 +3,7 @@ import { useAppSelector } from '../../redux/hooks'
 import { selectEdge, selectTempEdgePosition } from '../../redux/modules/edges'
 import { selectNodeHandlePosition } from '../../redux/modules/nodes'
 
-const paddingX = 40
+
 const paddingY = 5
 const controlPointOffset = 100
 const marginX = 10
@@ -24,6 +24,7 @@ function Edge({ id }: EdgeProps) {
   const sourceLeft = sourcePos.x <= targetPos.x
   const sourceTop = sourcePos.y <= targetPos.y
   const width = Math.abs(sourcePos.x - targetPos.x)
+  const paddingX = sourceLeft ? 40 : 40 + width * 0.04
   const height = Math.abs(sourcePos.y - targetPos.y)
   const controlPointOffsetActual = Math.max(controlPointOffset, width / 3)
 
