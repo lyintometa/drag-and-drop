@@ -1,0 +1,41 @@
+.dnd-curve {
+  position: absolute;
+  pointer-events: none;
+
+  &.dnd-selected {
+    z-index: 10;
+  }
+
+  path {
+    fill: none;
+    stroke-linecap: round;
+  }
+
+  .dnd-outline {
+    stroke: transparent;
+    stroke-width: calc(7px * var(--dnd-size-factor));
+
+    &.dnd-selected {
+      stroke: cornflowerblue;
+    }
+  }
+
+  .dnd-border {
+    stroke: transparent;
+    stroke-width: calc(4px * var(--dnd-size-factor));
+
+    &.dnd-selected {
+      stroke: black;
+    }
+  }
+
+  .dnd-body {
+    stroke: white;
+    stroke-width: calc(2px * var(--dnd-size-factor));
+  }
+
+  .dnd-path-area {
+    pointer-events: all;
+    cursor: pointer;
+  }
+}

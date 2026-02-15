@@ -1,0 +1,12 @@
+.dnd-draggable {
+  position: absolute;
+  cursor: pointer;
+
+  /* fixes border artifacts when zooming */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
+  &.dnd-grabbed {
+    cursor: grabbing;
+  }
+}
