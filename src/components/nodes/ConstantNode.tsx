@@ -4,7 +4,7 @@ import { NodeHandleType } from 'models/NodeHandle'
 import { NODE_TEMPLATE_BY_TYPE } from 'models/NodeTemplate'
 import NodeType from 'models/NodeType'
 import { useAppDispatch, useAppSelector } from 'redux/hooks'
-import { selectNodeValue, setNodeValue } from 'redux/modules/nodes'
+import { selectNodeValue, setNodeValue } from 'redux/modules/elements'
 
 import { NodeProps } from './common/Node'
 import NodeHandle from './common/NodeHandle'

@@ -6,8 +6,8 @@ import NodeType from 'models/NodeType'
 import { useAppSelector } from 'redux/hooks'
 
 export default function useReturnParameterType(nodeId: string, parameterName: string): DataType | null {
-  const nodesById = useAppSelector(state => state.nodes.byId)
-  const edges = useAppSelector(state => Object.values(state.edges.byId), shallowEqual)
+  const nodesById = useAppSelector(state => state.elements.nodes.byId)
+  const edges = useAppSelector(state => Object.values(state.elements.edges.byId), shallowEqual)
 
   const getReturnParameterTypeRecursive = useCallback(
     (nodeId: string, parameterName: string): DataType | null => {

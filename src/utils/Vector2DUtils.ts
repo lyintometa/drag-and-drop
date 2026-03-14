@@ -1,5 +1,5 @@
 import { BoardState } from 'contexts/BoardContext'
-import MousePosition from 'models/MousePosition'
+import ClientPosition from 'models/ClientPosition'
 import Vector2D from 'models/Vector2D'
 
 export default class Vector2DUtils {
@@ -19,7 +19,7 @@ export default class Vector2DUtils {
     return { x: quotient.x / dividend, y: quotient.y / dividend }
   }
 
-  static projectClientToBoard({ clientX, clientY }: MousePosition, { offset, zoom }: BoardState): Vector2D {
+  static projectClientToBoard({ clientX, clientY }: ClientPosition, { offset, zoom }: BoardState): Vector2D {
     return {
       x: (clientX - offset.x + 0.5 * window.innerWidth * (zoom - 1)) / zoom,
       y: (clientY - offset.y + 0.5 * window.innerHeight * (zoom - 1)) / zoom,
@@ -37,5 +37,9 @@ export default class Vector2DUtils {
     if (vector1 === undefined) return vector2 === undefined
     if (vector2 === undefined) return false
     return vector1.x === vector2.x && vector1.y === vector2.y
+  }
+
+  static round(vector: Vector2D): Vector2D {
+    return { x: Math.round(vector.x), y: Math.round(vector.y) }
   }
 }

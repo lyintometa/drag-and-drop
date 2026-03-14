@@ -1,20 +1,19 @@
-import { DetailedHTMLProps, HTMLAttributes, useCallback } from 'react'
+import { DetailedHTMLProps, HTMLAttributes } from 'react'
 
 import Draggable from 'components/dragAndDrop/Draggable'
-import useWindowEventListener from 'hooks/useWindowEventListener'
+import useResizeObserver from 'hooks/useResizeObserver'
 import NodeType from 'models/NodeType'
 import Vector2D from 'models/Vector2D'
 import { useAppDispatch, useAppSelector } from 'redux/hooks'
-import { setSelectedEdge } from 'redux/modules/edges'
 import {
   setPosition,
   selectNodeType,
   selectNodePosition,
   setSelectedNode,
   selectIsNodeSelected,
-  offsetPosition,
-} from 'redux/modules/nodes'
-import MousePositionUtils from 'utils/MousePositionUtils'
+  toggleSelectedNode,
+  setCalculatedNodeSize,
+} from 'redux/modules/elements'
 import { classNames } from 'utils/classNameUtils'
 
 import AddNode from '../AddNode'
@@ -57,50 +56,25 @@ interface DraggableNode extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>
 function DraggableNode({ className, nodeId, ...props }: DraggableNode) {
   const dispatch = useAppDispatch()
   const isSelected = useAppSelector(selectIsNodeSelected(nodeId))
-
   const position = useAppSelector(selectNodePosition(nodeId))
 
-  function handleMouseDown(downEvent: React.MouseEvent) {
-    window.addEventListener(
-      'mouseup',
-      upEvent => {
-        if (!MousePositionUtils.equals(downEvent, upEvent)) return
-        dispatch(setSelectedNode(nodeId))
-        dispatch(setSelectedEdge(undefined))
-      },
-      { once: true, passive: true },
-    )
-  }
-
-  const handleMove = useCallback(
-    (position: Vector2D) => dispatch(setPosition({ id: nodeId, position: position })),
-    [nodeId, dispatch],
-  )
-
-  useWindowEventListener('keydown', (e: KeyboardEvent) => {
-    if (!isSelected) return
-    switch (e.key) {
-      case 'ArrowLeft':
-        dispatch(offsetPosition({ id: nodeId, offset: { x: -1, y: 0 } }))
-        break
-      case 'ArrowRight':
-        dispatch(offsetPosition({ id: nodeId, offset: { x: 1, y: 0 } }))
-        break
-      case 'ArrowUp':
-        dispatch(offsetPosition({ id: nodeId, offset: { x: 0, y: -1 } }))
-        break
-      case 'ArrowDown':
-        dispatch(offsetPosition({ id: nodeId, offset: { x: 0, y: 1 } }))
-        break
-    }
+  useResizeObserver(nodeId, entry => {
+    const size = entry[0]?.borderBoxSize[0]
+    if (size === undefined) return
+    dispatch(setCalculatedNodeSize({ id: nodeId, calculatedSize: { x: size.inlineSize, y: size.blockSize } }))
   })
+
+  const handleMove = (position: Vector2D) => dispatch(setPosition({ id: nodeId, position: position }))
+
+  const handleSelected = (shiftKey: boolean) =>
+    shiftKey ? dispatch(toggleSelectedNode(nodeId)) : dispatch(setSelectedNode(nodeId))
 
   return (
     <Draggable
-      className={classNames(className, { selected: isSelected })}
-      onMouseDown={handleMouseDown}
+      className={classNames(className, { 'selected': isSelected })}
       position={position}
       onMove={handleMove}
+      onSelected={handleSelected}
       {...props}
     />
   )

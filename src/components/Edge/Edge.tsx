@@ -1,7 +1,12 @@
 import Curve from 'components/dragAndDrop/Curve'
 import { useAppDispatch, useAppSelector } from 'redux/hooks'
-import { selectEdge, selectIsEdgeSelected, setSelectedEdge } from 'redux/modules/edges'
-import { selectNodeHandlePosition, setSelectedNode } from 'redux/modules/nodes'
+import {
+  selectEdge,
+  selectIsEdgeSelected,
+  selectNodeHandlePosition,
+  setSelectedEdge,
+  toggleSelectedEdge,
+} from 'redux/modules/elements'
 import Vector2DUtils from 'utils/Vector2DUtils'
 
 export interface EdgeProps {
@@ -19,8 +24,11 @@ export default function Edge({ edgeId }: EdgeProps) {
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    dispatch(setSelectedEdge(edgeId))
-    dispatch(setSelectedNode(undefined))
+    if (e.shiftKey) {
+      dispatch(toggleSelectedEdge(edgeId))
+    } else {
+      dispatch(setSelectedEdge(edgeId))
+    }
   }
 
   return (

@@ -20,11 +20,14 @@ export default function CenterButton({ onInitialized }: CenterButtonProps) {
   const boardRef = useContext(BoardRefContext)
 
   const handleClick = useEffectEvent(() => {
-    const nodes = Object.values(store.getState().nodes.byId)
+    const nodes = Object.values(store.getState().elements.nodes.byId)
     const boundingRect = NodeUtils.getBoundingRect(nodes, boardRef.current.zoom, PADDING)
     if (boundingRect === undefined) return
 
-    const zoom = Math.min(window.innerWidth / boundingRect.width, window.innerHeight / boundingRect.height)
+    const zoom = Math.min(
+      Math.min(window.innerWidth / boundingRect.width, window.innerHeight / boundingRect.height),
+      1 / SIZE_FACTOR,
+    )
     const offsetCenter = {
       x: (window.innerWidth / zoom - boundingRect.width) / 2,
       y: (window.innerHeight / zoom - boundingRect.height) / 2,

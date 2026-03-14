@@ -6,8 +6,8 @@ import useWindowEventListener from 'hooks/useWindowEventListener'
 import NodeHandle, { NodeHandleType } from 'models/NodeHandle'
 import Vector2D from 'models/Vector2D'
 import { useAppSelector } from 'redux/hooks'
-import { selectTempEdge } from 'redux/modules/edges'
-import { selectNodeHandlePosition } from 'redux/modules/nodes'
+import { selectTempEdge } from 'redux/modules/elements'
+import { selectNodeHandlePosition } from 'redux/modules/elements'
 import Vector2DUtils from 'utils/Vector2DUtils'
 
 export default function NewEdge() {

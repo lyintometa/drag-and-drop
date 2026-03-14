@@ -5,8 +5,8 @@ import useResizeObserver from 'hooks/useResizeObserver'
 import NodeHandleModel, { NodeHandleType } from 'models/NodeHandle'
 import { SIZE_FACTOR } from 'providers/BoardProvider'
 import { useAppDispatch, useAppSelector } from 'redux/hooks'
-import { dropEdge, selectIsConnectedEdgeSelected, startEdge } from 'redux/modules/edges'
-import { selectGrabbedHandle, selectIsHandleGrabbed, setGrabbedHandle, setHandlePosition } from 'redux/modules/nodes'
+import { dropEdge, selectIsConnectedEdgeSelected, selectIsNodeSelected, startEdge } from 'redux/modules/elements'
+import { selectGrabbedHandle, selectIsHandleGrabbed, setHandlePosition } from 'redux/modules/elements'
 import HTMLElementUtils from 'utils/HTMLElementUtils'
 import Vector2DUtils from 'utils/Vector2DUtils'
 import { classNames } from 'utils/classNameUtils'
@@ -23,6 +23,7 @@ export default function NodeHandle({ className, handle, style, ...props }: NodeH
   const dispatch = useAppDispatch()
   const boardRef = useContext(BoardRefContext)
 
+  const isNodeSelected = useAppSelector(selectIsNodeSelected(handle.nodeId))
   const isEdgeSelected = useAppSelector(selectIsConnectedEdgeSelected(handle))
   const isGrabbed = useAppSelector(selectIsHandleGrabbed(handle))
   const grabbedHandle = useAppSelector(selectGrabbedHandle)
@@ -46,28 +47,30 @@ export default function NodeHandle({ className, handle, style, ...props }: NodeH
   useResizeObserver(handle.nodeId, handleResize)
 
   const handleMouseDown = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (e.buttons !== 1) return
     e.stopPropagation()
 
     dispatch(startEdge({ handle }))
-    dispatch(setGrabbedHandle(handle))
 
-    const handleMouseUp = () => dispatch(dropEdge())
+    const handleMouseUp = () => {
+      dispatch(dropEdge())
+    }
 
     window.addEventListener('mouseup', handleMouseUp, { once: true, passive: true })
   }
 
   const handleMouseUp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (grabbedHandle === undefined) return
     e.stopPropagation()
 
     dispatch(dropEdge(handle))
-    dispatch(setGrabbedHandle())
   }
 
   return (
     <button
       {...props}
       className={classNames(className, 'handle', {
-        'edge-selected': isEdgeSelected,
+        'edge-selected': isEdgeSelected && !isNodeSelected,
         'grabbed': isGrabbed,
         'source': handle.type === NodeHandleType.Source,
         'target': handle.type === NodeHandleType.Target,

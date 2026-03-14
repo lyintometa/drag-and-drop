@@ -24,4 +24,16 @@
     height: 100%;
     width: 100%;
   }
+
+  .dnd-selected-area {
+    position: absolute;
+    border-width: calc((0.0625em / 4) / var(--dnd-zoom-factor));
+    border-style: solid;
+    border-color: white;
+    z-index: 100;
+
+    /* fixes border artifacts when zooming */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
 }
