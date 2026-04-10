@@ -44,7 +44,7 @@ export default function ConstantNode({ id }: NodeProps) {
             />
             <NodeReturnParameterType nodeId={id} handleKey='return' />
             <NodeHandle
-              id={`${NODE_TEMPLATE.name}_${id}_${NODE_TEMPLATE.returnParameters['return']}`}
+              id={`${NODE_TEMPLATE.name}_${id}_${NODE_TEMPLATE.returnValue['return']}`}
               handle={{ nodeId: id, key: 'return', type: NodeHandleType.Source }}
             />
           </div>

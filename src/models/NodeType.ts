@@ -1,7 +1,7 @@
 enum NodeType {
-  Add,
-  Constant,
-  Out,
+  Add = 'Add',
+  Constant = 'Constant',
+  Out = 'Out',
 }
 
 export default NodeType

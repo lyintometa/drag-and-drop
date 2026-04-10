@@ -20,6 +20,7 @@ import AddNode from '../AddNode'
 import ConstantNode from '../ConstantNode'
 import GeneralNode from '../GeneralNode'
 import OutNode from '../OutNode'
+
 import './Node.css'
 
 export interface NodeProps {

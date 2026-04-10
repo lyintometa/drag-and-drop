@@ -1,19 +1,26 @@
 import NodeType from './NodeType'
 
 export default interface NodeTemplate {
+  type: NodeType
   name: string
   description: string
   genericParameters?: Record<string, object>
   inputParameters: Record<string, NodeInputParameter>
-  returnParameters: Record<string, NodeReturnParameter>
+  returnValue: Record<string, NodeReturnParameter>
 }
 
 export interface NodeInputParameter {
   name: string
   description: string
   genericDataType?: string
+  setsGenericDataType?: string
   allowedDataTypes?: DataType[]
+  options?: NodeInputParameterOption[]
   inputMethod: InputMethod
+}
+
+export interface NodeInputParameterOption {
+  value: DataType
 }
 
 export interface NodeReturnParameter {
@@ -39,6 +46,7 @@ export enum InputMethod {
 
 export const NODE_TEMPLATE_BY_TYPE = {
   [NodeType.Add]: {
+    type: NodeType.Add,
     name: 'Add',
     description: 'Adds two values together',
     genericParameters: {
@@ -60,7 +68,7 @@ export const NODE_TEMPLATE_BY_TYPE = {
         inputMethod: InputMethod.Sink,
       },
     },
-    returnParameters: {
+    returnValue: {
       result: {
         name: 'Result',
         description: 'The resulting value',
@@ -69,6 +77,7 @@ export const NODE_TEMPLATE_BY_TYPE = {
     },
   },
   [NodeType.Constant]: {
+    type: NodeType.Constant,
     name: 'Constant',
     description: 'Returns a constant value',
     genericParameters: {
@@ -81,14 +90,18 @@ export const NODE_TEMPLATE_BY_TYPE = {
         name: 'Data Type',
         description: 'The data type of the value',
         inputMethod: InputMethod.Manual,
+        allowedDataTypes: [DataType.Enumeration],
+        setsGenericDataType: 'TValue',
+        options: [{ value: DataType.String }, { value: DataType.Integer }],
       },
       value: {
         name: 'Value',
         description: 'The value to return',
         inputMethod: InputMethod.Manual,
+        genericDataType: 'TValue',
       },
     },
-    returnParameters: {
+    returnValue: {
       return: {
         name: 'Return',
         description: 'The value to return',
@@ -96,6 +109,7 @@ export const NODE_TEMPLATE_BY_TYPE = {
     },
   },
   [NodeType.Out]: {
+    type: NodeType.Out,
     name: 'Out',
     description: 'Returns a constant value',
     inputParameters: {
@@ -112,6 +126,6 @@ export const NODE_TEMPLATE_BY_TYPE = {
         inputMethod: InputMethod.Sink,
       },
     },
-    returnParameters: {},
+    returnValue: {},
   },
 } satisfies Record<NodeType, NodeTemplate>

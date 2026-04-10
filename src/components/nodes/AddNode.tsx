@@ -27,7 +27,7 @@ export default function AddNode({ id }: NodeProps) {
           ))}
         </div>
         <div className='parameters sources'>
-          {Object.entries(NODE_TEMPLATE.returnParameters).map(([key, returnValue]) => (
+          {Object.entries(NODE_TEMPLATE.returnValue).map(([key, returnValue]) => (
             <div className='parameter' key={key}>
               <p>{returnValue.name}</p>
               <NodeReturnParameterType nodeId={id} handleKey={key} />

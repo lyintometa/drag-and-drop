@@ -76,6 +76,11 @@
       .parameter {
         display: flex;
         align-items: center;
+        gap: 1em;
+      }
+
+      &.manual > .parameter {
+        justify-content: space-between;
       }
 
       &.sources > .parameter {

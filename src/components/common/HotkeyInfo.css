@@ -1,0 +1,56 @@
+.hotkey-info {
+  position: absolute;
+  bottom: 32px;
+  right: 64px;
+
+  color: white;
+
+  .keys {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: end;
+    align-items: center;
+    padding: 4px 8px;
+
+    svg {
+      margin-top: 2px;
+      height: 24px;
+    }
+
+    .key {
+      color: black;
+      font-weight: 500;
+      text-align: center;
+      flex-shrink: 0;
+
+      height: 24px;
+      min-width: 24px;
+      padding: 0 4px;
+      margin: 0 4px;
+
+      background-color: white;
+      border: 1px solid black;
+      border-radius: 4px;
+
+      box-shadow:
+        0px 3px 0px 0.5px white,
+        0px 3px 0px 1.5px black;
+    }
+  }
+
+  .description {
+    white-space: nowrap;
+
+    font-size: 0.875rem;
+    color: white;
+    text-shadow:
+      1px 1px 0.5px black,
+      -1px 1px 0.5px black,
+      1px -1px 0.5px black,
+      -1px -1px 0.5px black,
+      1px 0px 0.5px black,
+      -1px 0px 0.5px black,
+      0px 1px 0.5px black,
+      0px -1px 0.5px black;
+  }
+}

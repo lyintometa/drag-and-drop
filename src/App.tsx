@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react'
 import Edge from 'components/Edge/Edge'
 import NewEdge from 'components/Edge/NewEdge'
 import CenterButton from 'components/common/CenterButton'
+import HotkeyInfo from 'components/common/HotkeyInfo'
+import NewNodeInput from 'components/common/NewNodeInput'
+import Drawboard, { SelectAreaEvent } from 'components/dragAndDrop/Drawboard'
 import Node from 'components/nodes/common/Node'
 import useWindowEventListener from 'hooks/useWindowEventListener'
 import { NodeHandleType } from 'models/NodeHandle'
-import { DataType } from 'models/NodeTemplate'
+import { DataType, NODE_TEMPLATE_BY_TYPE } from 'models/NodeTemplate'
 import NodeType from 'models/NodeType'
 import BoardProvider from 'providers/BoardProvider'
 import { useAppDispatch, useAppSelector } from 'redux/hooks'
@@ -19,7 +22,7 @@ import {
   selectNodeIds,
 } from 'redux/modules/elements'
 
-import Drawboard, { SelectAreaEvent } from './components/dragAndDrop/Drawboard'
+import './App.css'
 
 export default function App() {
   const dispatch = useAppDispatch()
@@ -28,6 +31,7 @@ export default function App() {
 
   const [wasRenderedAtLeastOnce, setWasRenderedAtLeastOnce] = useState(false)
   const [initialized, setInitialized] = useState(false)
+  const [showNewNodeInput, setShowNewNodeInput] = useState(false)
 
   useEffect(() => {
     dispatch(
@@ -121,7 +125,13 @@ export default function App() {
           }}
         />
       )}
+      <NewNodeInput
+        templates={Object.values(NODE_TEMPLATE_BY_TYPE)}
+        show={showNewNodeInput}
+        setShow={setShowNewNodeInput}
+      />
       {wasRenderedAtLeastOnce && <CenterButton onInitialized={() => setInitialized(true)} />}
+      <HotkeyInfo />
     </BoardProvider>
   )
 }

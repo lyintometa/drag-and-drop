@@ -26,6 +26,7 @@ export default function Drawboard({ children, onSelectArea }: DrawboardProps) {
   const board = useContext(BoardContext)
   const boardRef = useContext(BoardRefContext)
   const elementRef = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const [isGrabbed, setIsGrabbed] = useState<boolean>(false)
   const [selectedArea, setSelectedArea] = useState<{ start: Vector2D; end: Vector2D }>()
@@ -62,7 +63,7 @@ export default function Drawboard({ children, onSelectArea }: DrawboardProps) {
   }
 
   const handleLeftMouseDown = (eDown: React.MouseEvent) => {
-    if (eDown.target !== elementRef.current) return
+    if (eDown.target !== elementRef.current && eDown.target !== panelRef.current) return
 
     const start = Vector2DUtils.projectClientToBoard(eDown, boardRef.current)
 
@@ -75,6 +76,7 @@ export default function Drawboard({ children, onSelectArea }: DrawboardProps) {
       const end = Vector2DUtils.projectClientToBoard(eUp, boardRef.current)
       onSelectArea?.({ positionStart: start, positionEnd: end, shiftKey: eUp.shiftKey })
       setSelectedArea(undefined)
+      if (Vector2DUtils.equals(start, end)) (document.activeElement as HTMLElement)?.blur?.()
       window.removeEventListener('mousemove', handleMouseMove)
     }
 
@@ -97,11 +99,13 @@ export default function Drawboard({ children, onSelectArea }: DrawboardProps) {
       className={classNames('dnd-drawboard', { 'dnd-grabbed': isGrabbed })}
       ref={elementRef}
       style={{ '--dnd-size-factor': SIZE_FACTOR } as React.CSSProperties}
+      tabIndex={0}
       onMouseDown={handleMouseDown}
       onWheel={handleWheel}
     >
       <div
         className='dnd-panel'
+        ref={panelRef}
         style={
           {
             translate: `${board.offset.x}px ${board.offset.y}px`,

@@ -293,8 +293,15 @@ export const elementsSlice = createSlice({
       state.nodes.selectedIds = []
     },
     deleteSelected: state => {
+      const nodeIdsToDelete: string[] = []
+
       for (const nodeId of state.nodes.selectedIds) {
         const node = getNode(state, nodeId)
+        if (node.type === NodeType.Out) {
+          continue
+        }
+
+        nodeIdsToDelete.push(nodeId)
         delete state.nodes.byId[nodeId]
 
         for (const edgeId of Object.values(node.handles).flatMap(handle => handle.connectedEdges)) {
@@ -320,9 +327,9 @@ export const elementsSlice = createSlice({
         } // else { /* Already deleted */ }
       }
 
-      state.nodes.allIds = ArrayUtils.difference(state.nodes.allIds, state.nodes.selectedIds)
+      state.nodes.allIds = ArrayUtils.difference(state.nodes.allIds, nodeIdsToDelete)
       state.edges.allIds = ArrayUtils.difference(state.edges.allIds, state.edges.selectedIds)
-      state.nodes.selectedIds = []
+      state.nodes.selectedIds = state.nodes.selectedIds.filter(id => !nodeIdsToDelete.includes(id))
       state.edges.selectedIds = []
     },
   },
