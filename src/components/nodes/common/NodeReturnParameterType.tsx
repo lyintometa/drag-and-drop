@@ -8,5 +8,7 @@ export interface NodeReturnParameterTypeProps {
 export default function NodeReturnParameterType({ handleKey, nodeId }: NodeReturnParameterTypeProps) {
   const calculatedDataType = useReturnParameterType(nodeId, handleKey)
 
+  if (calculatedDataType === null) return null
+
   return <p>({calculatedDataType})</p>
 }

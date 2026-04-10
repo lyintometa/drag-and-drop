@@ -9,6 +9,7 @@ import Vector2DUtils from 'utils/Vector2DUtils'
 import './CenterButton.css'
 
 const PADDING = 100 * SIZE_FACTOR
+const OFFSET_LEFT = 300
 
 interface CenterButtonProps {
   onInitialized?: () => void
@@ -22,14 +23,17 @@ export default function CenterButton({ onInitialized }: CenterButtonProps) {
   const handleClick = useEffectEvent(() => {
     const nodes = Object.values(store.getState().elements.nodes.byId)
     const boundingRect = NodeUtils.getBoundingRect(nodes, boardRef.current.zoom, PADDING)
-    if (boundingRect === undefined) return
+    if (boundingRect === undefined || window.innerWidth < OFFSET_LEFT) return
+
+    const boardWidth = window.innerWidth - OFFSET_LEFT
 
     const zoom = Math.min(
-      Math.min(window.innerWidth / boundingRect.width, window.innerHeight / boundingRect.height),
+      Math.min(boardWidth / boundingRect.width, window.innerHeight / boundingRect.height),
       1 / SIZE_FACTOR,
     )
+
     const offsetCenter = {
-      x: (window.innerWidth / zoom - boundingRect.width) / 2,
+      x: (boardWidth / zoom - boundingRect.width) / 2 + OFFSET_LEFT / zoom,
       y: (window.innerHeight / zoom - boundingRect.height) / 2,
     }
 

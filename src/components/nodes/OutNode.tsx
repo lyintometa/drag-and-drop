@@ -10,7 +10,7 @@ const NODE_TEMPLATE = NODE_TEMPLATE_BY_TYPE[NodeType.Out]
 export default function OutNode({ id }: NodeProps) {
   return (
     <>
-      <p className='title' style={{ backgroundColor: 'coral' }}>
+      <p className='title' style={{ backgroundColor: 'lightgreen' }}>
         {NODE_TEMPLATE.name}
       </p>
       <div className='parameter-container'>

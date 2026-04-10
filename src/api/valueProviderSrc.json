@@ -1,0 +1,111 @@
+[
+  {
+    "name": "Simple Addition",
+    "data": {
+      "nodes": [
+        {
+          "id": "node_const_1",
+          "position": { "x": 0, "y": 0 },
+          "type": "Constant",
+          "handles": { "return": { "x": 0, "y": 0 } },
+          "value": { "dataType": "Integer", "value": "1000" }
+        },
+        {
+          "id": "node_const_2",
+          "position": { "x": 0, "y": 300 },
+          "type": "Constant",
+          "handles": { "return": { "x": 0, "y": 0 } },
+          "value": { "dataType": "Integer", "value": "20" }
+        },
+        {
+          "id": "node_add_1",
+          "position": { "x": 500, "y": 100 },
+          "type": "Add",
+          "handles": { "addend_1": { "x": 0, "y": 0 }, "addend_2": { "x": 0, "y": 0 }, "result": { "x": 0, "y": 0 } },
+          "value": {}
+        },
+        {
+          "id": "node_out",
+          "position": { "x": 800, "y": 200 },
+          "type": "Out",
+          "handles": { "value": { "x": 0, "y": 0 } },
+          "value": {}
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge_1",
+          "source": { "nodeId": "node_const_1", "key": "return", "type": "Source" },
+          "target": { "nodeId": "node_add_1", "key": "addend_1", "type": "Target" }
+        },
+        {
+          "id": "edge_2",
+          "source": { "nodeId": "node_const_2", "key": "return", "type": "Source" },
+          "target": { "nodeId": "node_add_1", "key": "addend_2", "type": "Target" }
+        },
+        {
+          "id": "edge_3",
+          "source": { "nodeId": "node_add_1", "key": "result", "type": "Source" },
+          "target": { "nodeId": "node_out", "key": "value", "type": "Target" }
+        }
+      ]
+    }
+  },
+  {
+    "name": "Complex Provider",
+    "data": {
+      "nodes": [
+        {
+          "id": "node_const_1",
+          "position": { "x": 0, "y": 0 },
+          "type": "Constant",
+          "handles": { "return": { "x": 0, "y": 0 } },
+          "value": { "dataType": "String", "value": "ProductionCounter" }
+        },
+        {
+          "id": "node_currentContext_1",
+          "position": { "x": 100, "y": 300 },
+          "type": "CurrentContext",
+          "handles": { "productionOrder": { "x": 0, "y": 0 }, "equipment": { "x": 0, "y": 0 } },
+          "value": { "dataType": "String", "value": "" }
+        },
+        {
+          "id": "node_plcValue_1",
+          "position": { "x": 500, "y": 100 },
+          "type": "PlcValue",
+          "handles": {
+            "name": { "x": 0, "y": 0 },
+            "dataType": { "x": 0, "y": 0 },
+            "equipment": { "x": 0, "y": 0 },
+            "value": { "x": 0, "y": 0 }
+          },
+          "value": { "dataType": "String" }
+        },
+        {
+          "id": "node_out",
+          "position": { "x": 800, "y": 300 },
+          "type": "Out",
+          "handles": { "value": { "x": 0, "y": 0 } },
+          "value": {}
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge_1",
+          "source": { "nodeId": "node_const_1", "key": "return", "type": "Source" },
+          "target": { "nodeId": "node_plcValue_1", "key": "name", "type": "Target" }
+        },
+        {
+          "id": "edge_2",
+          "source": { "nodeId": "node_currentContext_1", "key": "equipment", "type": "Source" },
+          "target": { "nodeId": "node_plcValue_1", "key": "equipment", "type": "Target" }
+        },
+        {
+          "id": "edge_3",
+          "source": { "nodeId": "node_plcValue_1", "key": "value", "type": "Source" },
+          "target": { "nodeId": "node_out", "key": "value", "type": "Target" }
+        }
+      ]
+    }
+  }
+]

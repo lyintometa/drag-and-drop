@@ -140,7 +140,7 @@ interface AutoCompleteOptionProps extends AutoCompleteOption {
   onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void
 }
 
-function AutoCompleteOption({ description, value, isLast, onSelect, onKeyDown }: AutoCompleteOptionProps) {
+function AutoCompleteOption({ description, name, isLast, onSelect, onKeyDown }: AutoCompleteOptionProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     switch (e.key) {
       case 'Enter':
@@ -168,7 +168,7 @@ function AutoCompleteOption({ description, value, isLast, onSelect, onKeyDown }:
 
   return (
     <button className='option' role='option' onClick={onSelect} onKeyDown={handleKeyDown}>
-      <p className='option-name'>{value}</p>
+      <p className='option-name'>{name}</p>
       <p className='option-description'>{description}</p>
     </button>
   )

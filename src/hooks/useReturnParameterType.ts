@@ -15,6 +15,9 @@ export default function useReturnParameterType(nodeId: string, parameterName: st
       if (node === undefined) throw new Error(`Node ${nodeId} not found`)
 
       switch (node.type) {
+        case NodeType.CurrentContext:
+          return null
+
         case NodeType.Constant:
           switch (parameterName) {
             case 'return':
@@ -54,7 +57,8 @@ export default function useReturnParameterType(nodeId: string, parameterName: st
           }
 
         default:
-          throw new Error(`Node type '${node.type satisfies never}' does not exist`)
+          return null
+        //throw new Error(`Node type '${node.type satisfies never}' does not exist`)
       }
     },
     [nodesById, edges],

@@ -5,6 +5,6 @@ export default interface NodeHandle {
 }
 
 export enum NodeHandleType {
-  Source = 'source',
-  Target = 'target',
+  Source = 'Source',
+  Target = 'Target',
 }

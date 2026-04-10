@@ -4,6 +4,16 @@
   border-radius: 0.5em;
   border: 0.0625em solid black;
 
+  &.node-group {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 0.0625em solid rgba(0, 0, 0, 0.5);
+
+    .node-group {
+      background-color: rgba(255, 255, 255, 0.75);
+      border: 0.0625em solid rgba(0, 0, 0, 0.75);
+    }
+  }
+
   &.selected {
     outline: 0.125em solid cornflowerblue;
     z-index: 12;
@@ -72,6 +82,10 @@
       display: flex;
       flex-direction: column;
       gap: 0.25em;
+
+      &:empty {
+        display: none;
+      }
 
       .parameter {
         display: flex;

@@ -3,6 +3,7 @@ import NodeType from './NodeType'
 export default interface NodeTemplate {
   type: NodeType
   name: string
+  isGroup?: boolean
   description: string
   genericParameters?: Record<string, object>
   inputParameters: Record<string, NodeInputParameter>
@@ -108,9 +109,25 @@ export const NODE_TEMPLATE_BY_TYPE = {
       },
     },
   },
+  [NodeType.CurrentContext]: {
+    type: NodeType.CurrentContext,
+    name: 'Current Context',
+    description: 'Provides context information',
+    inputParameters: {},
+    returnValue: {
+      productionOrder: {
+        name: 'Production Order',
+        description: 'The production order information',
+      },
+      equipment: {
+        name: 'Equipment',
+        description: 'The equipment information',
+      },
+    },
+  },
   [NodeType.Out]: {
     type: NodeType.Out,
-    name: 'Out',
+    name: 'Provider Value',
     description: 'Returns a constant value',
     inputParameters: {
       dataType: {
@@ -127,5 +144,65 @@ export const NODE_TEMPLATE_BY_TYPE = {
       },
     },
     returnValue: {},
+  },
+  [NodeType.PlcValue]: {
+    type: NodeType.PlcValue,
+    name: 'PLC Value',
+    description: 'Reads a bit form PLC',
+    genericParameters: {
+      TValue: {
+        extendsAnyOf: [['string'], ['integer']],
+      },
+    },
+    inputParameters: {
+      name: {
+        name: 'Name',
+        description: 'The name of the PLC bit',
+        allowedDataTypes: [DataType.String],
+        inputMethod: InputMethod.Sink,
+      },
+      dataType: {
+        name: 'Data Type',
+        description: 'The data type',
+        inputMethod: InputMethod.Manual,
+        allowedDataTypes: [DataType.Enumeration],
+        setsGenericDataType: 'TValue',
+        options: [{ value: DataType.String }, { value: DataType.Integer }],
+      },
+      equipment: {
+        name: 'Equipment',
+        description: 'The equipment',
+        allowedDataTypes: [DataType.String],
+        inputMethod: InputMethod.Sink,
+      },
+    },
+    returnValue: {
+      value: {
+        name: 'Value',
+        description: 'The value of the PLC bit',
+        dataType: { type: 'generic', name: 'TValue' },
+      },
+    },
+  },
+  [NodeType.ProductionCounterTEMP]: {
+    type: NodeType.ProductionCounterTEMP,
+    name: 'Production Counter',
+    isGroup: true,
+    description: 'Reads the production counter from a PLC',
+    inputParameters: {
+      equipment: {
+        name: 'Equipment',
+        description: 'The equipment',
+        allowedDataTypes: [DataType.String],
+        inputMethod: InputMethod.Sink,
+      },
+    },
+    returnValue: {
+      value: {
+        name: 'Value',
+        description: 'The value of the PLC bit',
+        dataType: { type: 'constant', name: DataType.Integer },
+      },
+    },
   },
 } satisfies Record<NodeType, NodeTemplate>

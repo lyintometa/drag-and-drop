@@ -24,59 +24,23 @@ import {
 
 import './App.css'
 
+import SideMenu from 'components/common/SideMenu'
+import ValueProvider from 'models/ValueProvider'
+
 export default function App() {
   const dispatch = useAppDispatch()
   const nodes = useAppSelector(selectNodeIds)
   const edges = useAppSelector(selectEdgeIds)
 
-  const [wasRenderedAtLeastOnce, setWasRenderedAtLeastOnce] = useState(false)
   const [initialized, setInitialized] = useState(false)
   const [showNewNodeInput, setShowNewNodeInput] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState<string>()
+
+  const [wasRenderedAtLeastOnce, setWasRenderedAtLeastOnce] = useState(false)
 
   useEffect(() => {
-    dispatch(
-      initialize({
-        nodes: [
-          {
-            id: 'randomUUID()',
-            position: { x: 0, y: 0 },
-            type: NodeType.Constant,
-            handles: { return: { x: 0, y: 0 } },
-            value: { dataType: DataType.String, value: '' },
-          },
-          {
-            id: 'awd',
-            position: { x: 100, y: 300 },
-            type: NodeType.Constant,
-            handles: { return: { x: 0, y: 0 } },
-            value: { dataType: DataType.String, value: '123' },
-          },
-          {
-            id: 'awd1',
-            position: { x: 800, y: 300 },
-            type: NodeType.Out,
-            handles: { return: { x: 0, y: 0 } },
-            value: {},
-          },
-          {
-            id: 'add1',
-            position: { x: 500, y: 100 },
-            type: NodeType.Add,
-            handles: { addend_1: { x: 0, y: 0 }, addend_2: { x: 0, y: 0 } },
-            value: {},
-          },
-        ],
-        edges: [
-          {
-            id: 'w',
-            source: { nodeId: 'awd', key: 'return', type: NodeHandleType.Source },
-            target: { nodeId: 'add1', key: 'addend_2', type: NodeHandleType.Target },
-          },
-        ],
-      }),
-    )
     setWasRenderedAtLeastOnce(true)
-  }, [])
+  }, [wasRenderedAtLeastOnce])
 
   const handleSelectArea = (e: SelectAreaEvent) => {
     dispatch(selectArea({ start: e.positionStart, end: e.positionEnd, shiftKey: e.shiftKey }))
@@ -102,36 +66,46 @@ export default function App() {
     }
   })
 
+  const handleSelectProvider = (provider: ValueProvider) => {
+    if (provider.name === selectedProvider) return
+    setSelectedProvider(provider.name)
+    dispatch(initialize(provider.data))
+    setWasRenderedAtLeastOnce(false)
+  }
+
   return (
-    <BoardProvider>
-      <Drawboard onSelectArea={handleSelectArea}>
-        {edges.map(id => (
-          <Edge edgeId={id} key={id} />
-        ))}
-        <NewEdge />
-        {nodes.map(id => (
-          <Node id={id} key={id} />
-        ))}
-      </Drawboard>
-      {!initialized && (
-        <div
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgb(40, 40, 40)',
-          }}
+    <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      <SideMenu selectedProvider={selectedProvider} onSelect={handleSelectProvider} />
+      <BoardProvider>
+        <Drawboard onSelectArea={handleSelectArea}>
+          {edges.map(id => (
+            <Edge edgeId={id} key={selectedProvider + id} />
+          ))}
+          <NewEdge />
+          {nodes.map(id => (
+            <Node id={id} key={selectedProvider + id} />
+          ))}
+        </Drawboard>
+        {!initialized && (
+          <div
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              width: '100%',
+              height: '100%',
+              backgroundColor: 'rgb(40, 40, 40)',
+            }}
+          />
+        )}
+        <NewNodeInput
+          templates={Object.values(NODE_TEMPLATE_BY_TYPE)}
+          show={showNewNodeInput}
+          setShow={setShowNewNodeInput}
         />
-      )}
-      <NewNodeInput
-        templates={Object.values(NODE_TEMPLATE_BY_TYPE)}
-        show={showNewNodeInput}
-        setShow={setShowNewNodeInput}
-      />
-      {wasRenderedAtLeastOnce && <CenterButton onInitialized={() => setInitialized(true)} />}
+        {wasRenderedAtLeastOnce && <CenterButton onInitialized={() => setInitialized(true)} />}
+      </BoardProvider>
       <HotkeyInfo />
-    </BoardProvider>
+    </div>
   )
 }

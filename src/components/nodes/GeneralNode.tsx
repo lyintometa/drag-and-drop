@@ -24,7 +24,15 @@ export default function GeneralNode({ id, type }: GeneralNodeProps) {
 
   return (
     <>
-      <p className='title' style={{ backgroundColor: 'lightgrey' }}>
+      <p
+        className='title'
+        style={{
+          backgroundColor:
+            NODE_TEMPLATE.isGroup ? 'orange'
+            : Object.keys(NODE_TEMPLATE.inputParameters).length > 0 ? 'yellow'
+            : 'lightblue',
+        }}
+      >
         {NODE_TEMPLATE.name}
       </p>
       <div className='parameter-container'>
@@ -42,7 +50,7 @@ export default function GeneralNode({ id, type }: GeneralNodeProps) {
                     onMouseDown={e => e.stopPropagation()}
                   >
                     {parameter.options?.map(option => (
-                      <option>{option.value}</option>
+                      <option key={option.value}>{option.value}</option>
                     ))}
                   </select>
                 : <input
